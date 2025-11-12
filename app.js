@@ -46,6 +46,11 @@ function searchCountry() {
                     document.getElementById("timezones").innerText = country.timezones;
                     document.getElementById("independent").innerText = country.independent;
                     document.getElementById("tld").innerText = country.cca2;
+
+                    const lat = country.latlng[0];
+                    const lng = country.latlng[1];
+                    const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng-5},${lat-5},${lng+5},${lat+5}&layer=mapnik&marker=${lat},${lng}`;
+                    document.getElementById("mapData").innerHTML = `<iframe width="100%" height="100%" frameborder="0" style="border-radius: 12px;" src="${mapUrl}"></iframe>`;
                 }
 
             });
