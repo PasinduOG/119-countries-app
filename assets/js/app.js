@@ -1,4 +1,4 @@
-function searchCountry() {
+function searchCity() {
     let name = document.getElementById("search").value;
 
     if (!name.trim()) {
@@ -6,6 +6,21 @@ function searchCountry() {
         return;
     }
 
+    fetch(`http://api.weatherapi.com/v1/current.json?key=90e86490d94349479e973236251211&q=${name}`)
+        .then(res => res.json())
+        .then(data => {
+
+            searchCountry(data.location.country);
+            document.getElementById("weatherIcon").innerHTML = `<img src="${data.current.condition.icon}" alt="Weather icon" class="w-full h-full object-contain">`;
+            document.getElementById("temp").innerText = data.current.temp_c;
+            document.getElementById("weatherDesc").innerText = data.current.condition.text;
+            document.getElementById("weatherHumidity").innerText = data.current.humidity;
+            document.getElementById("weatherWind").innerText = data.current.wind_mph * 0.44704;
+
+        });
+}
+
+function searchCountry(name) {
     try {
         fetch(`https://restcountries.com/v3.1/name/${name}`)
             .then(res => res.json())
@@ -49,7 +64,7 @@ function searchCountry() {
 
                     const lat = country.latlng[0];
                     const lng = country.latlng[1];
-                    const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng-5},${lat-5},${lng+5},${lat+5}&layer=mapnik&marker=${lat},${lng}`;
+                    const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 5},${lat - 5},${lng + 5},${lat + 5}&layer=mapnik&marker=${lat},${lng}`;
                     document.getElementById("mapData").innerHTML = `<iframe width="100%" height="100%" frameborder="0" style="border-radius: 12px;" src="${mapUrl}"></iframe>`;
                 }
 

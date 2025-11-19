@@ -1,0 +1,18 @@
+dialog::backdrop {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    dialog[open] {
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
