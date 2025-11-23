@@ -3,6 +3,9 @@ function searchCity() {
 
     if (!name.trim()) {
         document.getElementById("card").classList.add("hidden");
+        document.getElementById("mapCard").classList.add("hidden");
+        document.getElementById("emptyState").classList.remove("hidden");
+        document.getElementById("mapEmptyState").classList.remove("hidden");
         return;
     }
 
@@ -11,12 +14,20 @@ function searchCity() {
         .then(data => {
 
             searchCountry(data.location.country);
-            document.getElementById("weatherIcon").innerHTML = `<img src="${data.current.condition.icon}" alt="Weather icon" class="w-full h-full object-contain">`;
             document.getElementById("temp").innerText = data.current.temp_c;
-            document.getElementById("weatherDesc").innerText = data.current.condition.text;
-            document.getElementById("weatherHumidity").innerText = data.current.humidity;
-            document.getElementById("weatherWind").innerText = data.current.wind_mph * 0.44704;
+            document.getElementById("city").innerText = data.location.name+", "+data.location.region+", "+data.location.country;
 
+            const lat = data.location.lat;
+            const lng = data.location.lon;
+            const margin = 0.01;
+
+            const left = lng - margin;
+            const bottom = lat - margin;
+            const right = lng + margin;
+            const top = lat + margin;
+
+            const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${left},${bottom},${right},${top}&layer=mapnik&marker=${lat},${lng}`;
+            document.getElementById("mapData").innerHTML = `<iframe width="100%" height="100%" frameborder="0" style="border-radius: 12px;" src="${mapUrl}"></iframe>`;
         });
 }
 
@@ -27,6 +38,9 @@ function searchCountry(name) {
             .then(data => {
                 for (let i = 0; i < data.length; i++) {
                     document.getElementById("card").classList.remove("hidden");
+                    document.getElementById("mapCard").classList.remove("hidden");
+                    document.getElementById("emptyState").classList.add("hidden");
+                    document.getElementById("mapEmptyState").classList.add("hidden");
 
                     const country = data[i];
                     const currencyKey = Object.keys(country.currencies)[0];
@@ -62,10 +76,10 @@ function searchCountry(name) {
                     document.getElementById("independent").innerText = country.independent;
                     document.getElementById("tld").innerText = country.cca2;
 
-                    const lat = country.latlng[0];
-                    const lng = country.latlng[1];
-                    const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 5},${lat - 5},${lng + 5},${lat + 5}&layer=mapnik&marker=${lat},${lng}`;
-                    document.getElementById("mapData").innerHTML = `<iframe width="100%" height="100%" frameborder="0" style="border-radius: 12px;" src="${mapUrl}"></iframe>`;
+                    // const lat = country.latlng[0];
+                    // const lng = country.latlng[1];
+                    // const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 5},${lat - 5},${lng + 5},${lat + 5}&layer=mapnik&marker=${lat},${lng}`;
+                    // document.getElementById("mapData").innerHTML = `<iframe width="100%" height="100%" frameborder="0" style="border-radius: 12px;" src="${mapUrl}"></iframe>`;
                 }
 
             });
